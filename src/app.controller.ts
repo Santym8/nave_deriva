@@ -1,12 +1,38 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Header, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { StatusDto } from './dto/status_dto';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get("status")
+  @Header('Content-Type', 'application/json')
+  getStatus(): StatusDto {
+    return this.appService.getRandomSystem();
+  }
+
+
+  @Get("/repair-bay")
+  @Header('Content-Type', 'text/html')
+  getSystemCode(): String {
+    const systemCode = this.appService.getSystemCode();
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Repair</title>
+      </head>
+      <body>
+          <div class="anchor-point">${systemCode}</div>
+      </body>
+      </html>
+    `;
+  }
+
+  @Post('/teapot')
+  teapot(): String {
+    throw new HttpException('I am a teapot', HttpStatus.I_AM_A_TEAPOT);
   }
 }
