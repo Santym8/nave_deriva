@@ -32,6 +32,7 @@ export class AppController {
   }
 
   @Post('/teapot')
+  @Header('Content-Type', 'application/json')
   teapot(): String {
     throw new HttpException('I am a teapot', HttpStatus.I_AM_A_TEAPOT);
   }
